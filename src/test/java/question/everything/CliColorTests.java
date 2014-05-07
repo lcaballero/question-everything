@@ -10,12 +10,10 @@ import static question.everything.CliColor.*;
 
 public class CliColorTests {
 
-//    @Test
-//    public void should_start_with_a_buffer() {
-//        CliColor cc = new CliColor();
-//
-//        assertThat(cc.getBuffer(), notNullValue());
-//    }
+    @Test
+    public void should_start_with_a_buffer() {
+        CliColor cc = new CliColor();
+    }
 //
 //    @Test
 //    public void should_start_with_esc() {
