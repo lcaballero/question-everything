@@ -1,4 +1,4 @@
-# Introduction
+# Introduction [![Build Status](https://travis-ci.org/lcaballero/question-everything.svg?branch=master)](https://travis-ci.org/lcaballero/question-everything)
 
 This is a java project to help build more awesome command line interfaces.
 It is not an options parser, there are a lot of those.  This is instead
