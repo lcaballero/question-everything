@@ -50,8 +50,6 @@ The same is true for styles.  They can be combined as well:
 
 ## License
 
-## License
-
 See license file.
 
 The use and distribution terms for this software are covered by the
