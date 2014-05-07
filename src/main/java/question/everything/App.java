@@ -54,7 +54,7 @@ public class App {
 
         new CliColor()
             .to(System.out)
-            .underline().print("Brave, World!").name().println();
-
+            .underline().print("Brave, World!").name().println()
+        ;
     }
 }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CliColor {
+public class CliColor implements Colors {
 
     private PrintStream out;
     private HashMap<String,ColorEsc> colorMap;
@@ -75,12 +75,12 @@ public class CliColor {
         if (!colorMap.containsKey(color)) {
             throw new IllegalArgumentException("No escape for color: " + color);
         }
-        activeColor = new ColorEsc(this.activeColor, colorMap.get(color));
+        this.activeColor = new ColorEsc(this.activeColor, colorMap.get(color));
         return this;
     }
 
     public CliColor() {
-        this.colorMap = mapColors(colors());
+        this.colorMap = mapColors();
     }
 
     public CliColor(CliColor cc) {
@@ -111,38 +111,15 @@ public class CliColor {
         return this;
     }
 
-    public HashMap<String,ColorEsc> mapColors(List<ColorEsc> escs) {
+    public HashMap<String,ColorEsc> mapColors() {
         HashMap<String,ColorEsc> map = new HashMap<>();
-        for (ColorEsc c : escs) {
+        for (ColorEsc c : AllEscapes) {
             map.put(c.getName(), c);
         }
         return map;
     }
 
-    public List<ColorEsc> colors() {
-        ArrayList<ColorEsc> escs = new ArrayList<>();
-
-        escs.add(ColorEsc.None);
-
-        escs.add(new ColorEsc("bold", 1, 22));
-        escs.add(new ColorEsc("italic", 3, 23));
-        escs.add(new ColorEsc("underline", 4, 24));
-        escs.add(new ColorEsc("blink", 5, 25));
-        escs.add(new ColorEsc("inverse", 7, 27));
-        escs.add(new ColorEsc("strike", 9, 29));
-
-        String[] colors = new String[] {
-            "black", "red", "green", "yellow", "blue",
-            "magenta", "cyan", "white"
-        };
-
-        for (int i = 0; i < colors.length; i++) {
-            escs.add(new ColorEsc(colors[i], 30 + i, 39));
-            escs.add(new ColorEsc(colors[i] + "Bright", 90 + i, 39));
-            escs.add(new ColorEsc(colors[i] + "Bg", 40 + i, 49));
-            escs.add(new ColorEsc(colors[i] + "BrightBg", 100 + i, 49));
-        }
-
-        return escs;
+    public ColorEsc getActiveColor() {
+        return this.activeColor;
     }
 }

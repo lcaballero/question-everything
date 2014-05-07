@@ -47,6 +47,7 @@ public class ColorEsc {
     public String getName() { return name; }
 
     public ColorEsc toStream(PrintStream out, String... params) {
+
         if (this.escStart.length == 0 || this.escEnd.length == 0) {
             System.out.print(Joiner.on(" ").join((params)));
         } else {
@@ -56,5 +57,27 @@ public class ColorEsc {
         }
 
         return this;
+    }
+
+    @Override
+    public int hashCode() {
+        return String.format(
+            "%s%s%s",
+            this.name,
+            new String(this.escStart),
+            new String(this.escEnd)).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof ColorEsc)) {
+            return false;
+        }
+        ColorEsc esc = (ColorEsc)obj;
+
+        return
+            this.name.equals(esc.name)
+            && new String(this.escStart).equals(new String(esc.escStart))
+            && new String(this.escEnd).equals(new String(esc.escEnd));
     }
 }
