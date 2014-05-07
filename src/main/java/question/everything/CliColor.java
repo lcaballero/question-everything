@@ -1,9 +1,7 @@
 package question.everything;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class CliColor implements Colors {
 

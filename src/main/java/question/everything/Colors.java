@@ -1,6 +1,5 @@
 package question.everything;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public interface Colors {

@@ -1,13 +1,9 @@
 package question.everything;
 
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.Matchers.greaterThan;
-
 import org.junit.Test;
 
-import java.util.HashMap;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 
 public class CliColorTests {
