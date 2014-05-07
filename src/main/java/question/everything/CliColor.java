@@ -20,12 +20,6 @@ public class CliColor implements Colors {
         return this;
     }
 
-    public CliColor nl(String... args) {
-        colorMap.get(ColorEsc.NONE).toStream(this.out, args);
-        this.out.println();
-        return this;
-    }
-
     public CliColor black() { return esc("black"); }
     public CliColor red() { return esc("red"); }
     public CliColor green() { return esc("green"); }
@@ -73,8 +67,10 @@ public class CliColor implements Colors {
         if (!colorMap.containsKey(color)) {
             throw new IllegalArgumentException("No escape for color: " + color);
         }
-        this.activeColor = new ColorEsc(this.activeColor, colorMap.get(color));
-        return this;
+        ColorEsc newColor = new ColorEsc(this.activeColor, colorMap.get(color));
+        CliColor cli = new CliColor(this, this.out, newColor);
+
+        return cli;
     }
 
     public CliColor() {
