@@ -14,6 +14,11 @@ import static org.junit.Assert.assertTrue;
 public class ColorsTests {
 
     @Test
+    public void the_color_none_should_be_equal_to_itself() {
+        assertThat(Colors.none.equals(Colors.none), is(true));
+    }
+
+    @Test
     public void should_have_styles_list_initialized() {
         assertThat(Colors.AllStyles, notNullValue());
         assertThat(Colors.AllStyles.size(), greaterThan(0));

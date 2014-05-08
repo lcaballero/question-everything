@@ -1,8 +1,14 @@
 package question.everything;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import java.util.HashMap;
+import java.util.stream.Collectors;
+
 public interface Colors {
+
+    public static final ColorEsc none = new ColorEsc();
     
     public static final ColorEsc bold = new ColorEsc("bold", 1, 22);
     public static final ColorEsc italic = new ColorEsc("italic", 3, 23);
@@ -73,4 +79,7 @@ public interface Colors {
 
     public static final ImmutableSet<ColorEsc> AllEscapes = ImmutableSet.<ColorEsc>builder()
         .addAll(AllStyles).addAll(AllColors).build();
+
+    public static final ImmutableMap<String,ColorEsc> AllEscapesMap = ImmutableMap.copyOf(
+        AllEscapes.stream().collect(Collectors.toMap((c) -> c.getName(), (c) -> c)));
 }

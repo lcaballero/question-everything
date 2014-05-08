@@ -9,7 +9,6 @@ public class ColorEsc {
 
     public static final char ESC = '\u001b';
     public static final String NONE = "none";
-    public static final ColorEsc None = new ColorEsc();
 
     private char[] escStart = new char[0];
     private char[] escEnd = new char[0];

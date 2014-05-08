@@ -48,12 +48,10 @@ public class App {
         ;
 
         new CliColor()
-            .to(System.out)
             .red().whiteBg().print("Brave, World!").name().println().clear()
         ;
 
         new CliColor()
-            .to(System.out)
             .underline().print("Brave, World!").name().println()
         ;
     }

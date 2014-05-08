@@ -1,13 +1,15 @@
 package question.everything;
 
+import com.google.common.collect.ImmutableMap;
+
 import java.io.PrintStream;
 import java.util.HashMap;
 
 public class CliColor implements Colors {
 
-    private PrintStream out;
-    private HashMap<String,ColorEsc> colorMap;
-    private ColorEsc activeColor = ColorEsc.None;
+    private PrintStream out = System.out;
+    private final ImmutableMap<String,ColorEsc> colorMap = Colors.AllEscapesMap;
+    private ColorEsc activeColor = Colors.none;
 
     public CliColor print(String... args) {
         activeColor.toStream(this.out, args);
@@ -68,49 +70,33 @@ public class CliColor implements Colors {
             throw new IllegalArgumentException("No escape for color: " + color);
         }
         ColorEsc newColor = new ColorEsc(this.activeColor, colorMap.get(color));
-        CliColor cli = new CliColor(this, this.out, newColor);
+        CliColor cli = new CliColor(this.out, newColor);
 
         return cli;
     }
 
-    public CliColor() {
-        this.colorMap = mapColors();
-    }
+    public CliColor() { }
 
-    public CliColor(CliColor cc) {
-        this(cc, null);
-    }
-
-    protected CliColor(CliColor cc, PrintStream out) {
-        this.colorMap = cc.colorMap;
+    protected CliColor(PrintStream out) {
         this.out = out;
     }
 
-    protected CliColor(CliColor cc, PrintStream out, ColorEsc esc) {
-        this.colorMap = cc.colorMap;
+    protected CliColor(PrintStream out, ColorEsc esc) {
         this.out = out;
         this.activeColor = esc;
     }
 
     public CliColor to(PrintStream print) {
-        return new CliColor(this, print);
+        return new CliColor(print);
     }
 
     public CliColor clear() {
-        return new CliColor(this, this.out);
+        return new CliColor(this.out);
     }
 
     public CliColor name() {
         print(String.format(" (%s)", activeColor.getName()));
         return this;
-    }
-
-    public HashMap<String,ColorEsc> mapColors() {
-        HashMap<String,ColorEsc> map = new HashMap<>();
-        for (ColorEsc c : AllEscapes) {
-            map.put(c.getName(), c);
-        }
-        return map;
     }
 
     public ColorEsc getActiveColor() {
