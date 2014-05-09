@@ -18,9 +18,9 @@ public class CliColorTests {
     @Test
     public void should_change_active_color_when_building() {
         CliColor cc = new CliColor();
-        ColorEsc a = cc.getActiveColor();
+        CliEsc a = cc.getActiveColor();
         cc = cc.red();
-        ColorEsc b = cc.getActiveColor();
+        CliEsc b = cc.getActiveColor();
 
         assertThat(a != b, is(true));
         assertThat(a.hashCode(), not(b.hashCode()));

@@ -3,13 +3,12 @@ package question.everything;
 import com.google.common.collect.ImmutableMap;
 
 import java.io.PrintStream;
-import java.util.HashMap;
 
 public class CliColor implements Colors {
 
     private PrintStream out = System.out;
-    private final ImmutableMap<String,ColorEsc> colorMap = Colors.AllEscapesMap;
-    private ColorEsc activeColor = Colors.none;
+    private final ImmutableMap<String,CliEsc> colorMap = Colors.AllEscapesMap;
+    private CliEsc activeColor = Colors.none;
 
     public CliColor print(String... args) {
         activeColor.toStream(this.out, args);
@@ -69,7 +68,7 @@ public class CliColor implements Colors {
         if (!colorMap.containsKey(color)) {
             throw new IllegalArgumentException("No escape for color: " + color);
         }
-        ColorEsc newColor = new ColorEsc(this.activeColor, colorMap.get(color));
+        CliEsc newColor = new CliEsc(this.activeColor, colorMap.get(color));
         CliColor cli = new CliColor(this.out, newColor);
 
         return cli;
@@ -81,7 +80,7 @@ public class CliColor implements Colors {
         this.out = out;
     }
 
-    protected CliColor(PrintStream out, ColorEsc esc) {
+    protected CliColor(PrintStream out, CliEsc esc) {
         this.out = out;
         this.activeColor = esc;
     }
@@ -99,7 +98,7 @@ public class CliColor implements Colors {
         return this;
     }
 
-    public ColorEsc getActiveColor() {
+    public CliEsc getActiveColor() {
         return this.activeColor;
     }
 }

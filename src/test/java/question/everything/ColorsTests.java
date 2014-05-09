@@ -39,7 +39,7 @@ public class ColorsTests {
     @Test
     public void should_find_all_escapes_have_unique_names() {
         Set<String> names = new HashSet<String>();
-        for (ColorEsc c : Colors.AllEscapes) {
+        for (CliEsc c : Colors.AllEscapes) {
             names.add(c.getName());
         }
         assertThat(names.size(), is(Colors.AllEscapes.size()));
@@ -47,8 +47,8 @@ public class ColorsTests {
 
     @Test
     public void should_find_all_escapes_have_unique_hash_codes() {
-        Set<ColorEsc> names = new HashSet<>();
-        for (ColorEsc c : Colors.AllEscapes) {
+        Set<CliEsc> names = new HashSet<>();
+        for (CliEsc c : Colors.AllEscapes) {
             names.add(c);
         }
         assertThat(names.size(), is(Colors.AllEscapes.size()));
