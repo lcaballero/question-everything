@@ -2,9 +2,10 @@ package question.everything;
 
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.*;
 
 
 public class CliColorTests {
@@ -18,9 +19,9 @@ public class CliColorTests {
     @Test
     public void should_change_active_color_when_building() {
         CliColor cc = new CliColor();
-        CliEsc a = cc.getActiveColor();
+        SpanEsc a = cc.getActiveColor();
         cc = cc.red();
-        CliEsc b = cc.getActiveColor();
+        SpanEsc b = cc.getActiveColor();
 
         assertThat(a != b, is(true));
         assertThat(a.hashCode(), not(b.hashCode()));

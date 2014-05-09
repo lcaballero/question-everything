@@ -2,11 +2,54 @@ package question.everything;
 
 import com.google.inject.Singleton;
 
+import java.io.Console;
+import java.io.PrintWriter;
+
 
 @Singleton
 public class App {
 
     public void start() throws IllegalAccessException {
+//        moves();
+        bol();
+    }
+
+    public void bol() {
+
+        System.out.print("Some test here ");
+
+        new BeginningOfLineEsc(0)
+            .apply(System.out);
+
+        System.out.println("Aarg");
+    }
+
+    public void readLine() {
+        Console console = System.console();
+        if (console == null) {
+            System.out.println("Cannot retrieve console");
+        }
+        String line = console.readLine();
+        new CliColor()
+            .to(System.out)
+            .print("I saw this line: ")
+            .red()
+            .println(line);
+    }
+
+    public void moves() {
+        System.out.println();
+        System.out.println("Next line that should not be completely overwritten.");
+
+        new CliColor()
+            .to(System.out)
+            .move(0, 2);
+
+        System.out.print("After");
+        System.out.println();
+    }
+
+    public void colors() {
 
         new CliColor()
             .to(System.out)

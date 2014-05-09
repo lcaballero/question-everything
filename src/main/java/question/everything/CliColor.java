@@ -3,20 +3,21 @@ package question.everything;
 import com.google.common.collect.ImmutableMap;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
 
 public class CliColor implements Colors {
 
     private PrintStream out = System.out;
-    private final ImmutableMap<String,CliEsc> colorMap = Colors.AllEscapesMap;
-    private CliEsc activeColor = Colors.none;
+    private final ImmutableMap<String,SpanEsc> colorMap = Colors.AllEscapesMap;
+    private SpanEsc activeColor = Colors.none;
 
     public CliColor print(String... args) {
-        activeColor.toStream(this.out, args);
+        activeColor.apply(this.out, args);
         return this;
     }
 
     public CliColor println(String... args) {
-        activeColor.toStream(this.out, args);
+        activeColor.apply(this.out, args);
         this.out.println();
         return this;
     }
@@ -68,37 +69,29 @@ public class CliColor implements Colors {
         if (!colorMap.containsKey(color)) {
             throw new IllegalArgumentException("No escape for color: " + color);
         }
-        CliEsc newColor = new CliEsc(this.activeColor, colorMap.get(color));
+        SpanEsc newColor = this.activeColor.wrap(colorMap.get(color));
         CliColor cli = new CliColor(this.out, newColor);
 
         return cli;
     }
 
     public CliColor() { }
-
-    protected CliColor(PrintStream out) {
-        this.out = out;
-    }
-
-    protected CliColor(PrintStream out, CliEsc esc) {
+    protected CliColor(PrintStream out) { this.out = out; }
+    protected CliColor(PrintStream out, SpanEsc esc) {
         this.out = out;
         this.activeColor = esc;
     }
 
-    public CliColor to(PrintStream print) {
-        return new CliColor(print);
-    }
-
-    public CliColor clear() {
-        return new CliColor(this.out);
-    }
-
+    public SpanEsc getActiveColor() { return this.activeColor; }
+    public CliColor to(PrintStream print) { return new CliColor(print); }
+    public CliColor clear() { return new CliColor(this.out); }
     public CliColor name() {
         print(String.format(" (%s)", activeColor.getName()));
         return this;
     }
 
-    public CliEsc getActiveColor() {
-        return this.activeColor;
+    public CliColor move(int x, int y) {
+        new MoveEsc(x, y).apply(this.out);
+        return this;
     }
 }
