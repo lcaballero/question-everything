@@ -3,15 +3,42 @@ package question.everything;
 import com.google.inject.Singleton;
 
 import java.io.Console;
-import java.io.PrintWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Singleton
 public class App {
 
-    public void start() throws IllegalAccessException {
-//        moves();
-        bol();
+    public void start() throws IllegalAccessException, IOException {
+
+        new Terminal().run();
+    }
+
+    private void read() throws IOException {
+        Reader reader = System.console().reader();
+        for (int i = 0; i < 10; i++) {
+            int r = reader.read();
+
+            System.out.println("read: " + r);
+        }
+    }
+
+    public void menu() throws IOException {
+
+        SpanEsc blue = new CliColor().to(System.out).blue().getActiveColor();
+        SpanEsc none = Colors.none;
+
+        List<String> items = new ArrayList<>();
+        items.add("Menu item 1 selection");
+        items.add("Menu item 2 selection");
+        items.add("Menu item 3 selection");
+
+        ListMenu list = new ListMenu(items, blue, none, System.out);
+
+        String selection = list.run();
     }
 
     public void bol() {
