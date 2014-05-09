@@ -13,17 +13,7 @@ import java.util.List;
 public class App {
 
     public void start() throws IllegalAccessException, IOException {
-
-        new Terminal().run();
-    }
-
-    private void read() throws IOException {
-        Reader reader = System.console().reader();
-        for (int i = 0; i < 10; i++) {
-            int r = reader.read();
-
-            System.out.println("read: " + r);
-        }
+        menu();
     }
 
     public void menu() throws IOException {
@@ -38,7 +28,7 @@ public class App {
 
         ListMenu list = new ListMenu(items, blue, none, System.out);
 
-        String selection = list.run();
+        new Terminal().add(list).run();
     }
 
     public void bol() {

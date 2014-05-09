@@ -4,28 +4,60 @@ package question.everything;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Terminal {
 
     private String ttyConfig;
+    private boolean hasReceivedShutdown = false;
+    private List<ITerminalListener> listeners;
+
+    class HandleCtrlC extends Thread {
+        public void run() { hasReceivedShutdown = true; }
+    }
+
+    public Terminal() {
+        this.listeners = new ArrayList<>();
+    }
+
+    public Terminal add(ITerminalListener listener) {
+        this.listeners.add(listener);
+        return this;
+    }
+
+    protected void fireShutdown(String message) {
+        listeners.stream().forEach((c) -> c.shuttingDown(message));
+    }
+
+    protected void fireRead(String chars) {
+        listeners.stream().forEach((c) -> c.read(chars));
+    }
+
+    protected void fireStartUp(String message) {
+        listeners.stream().forEach((c) -> c.startUp(message));
+    }
 
     public void run() {
 
         try {
             setTerminalToCBreak();
+            Runtime.getRuntime().addShutdownHook(new HandleCtrlC());
+            fireStartUp("Starting Up");
 
             while (true) {
+                if (hasReceivedShutdown) {
+                    fireShutdown("Killing read loop");
+                    break;
+                }
                 if ( System.in.available() != 0 ) {
                     int c = System.in.read();
                     if (c == 0x1B) {
-                        System.out.print("read: 0x1B");
-                        System.out.print((char)System.in.read());
-                        System.out.println((char)System.in.read());
-                    } else if (c == '\n') {
-                        System.out.println("read: \\n");
+                        String s = String.format("%s%s%s", (char)c, (char) System.in.read(), (char) System.in.read());
+                        fireRead(s);
                     } else {
-                        System.out.println("read: " + (char)c);
+                        fireRead(String.valueOf((char) c));
                     }
                 }
             }

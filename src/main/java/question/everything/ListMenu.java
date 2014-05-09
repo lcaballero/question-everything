@@ -5,12 +5,14 @@ import java.io.PrintStream;
 import java.io.Reader;
 import java.util.List;
 
-public class ListMenu {
+
+public class ListMenu implements ITerminalListener {
 
     private List<String> items;
     private PrintStream out;
     private SpanEsc active;
     private SpanEsc other;
+    private int selected;
 
     public ListMenu(List<String> items, SpanEsc active, SpanEsc other, PrintStream out) {
         this.items = items;
@@ -19,23 +21,38 @@ public class ListMenu {
         this.out = out;
     }
 
-    public String run() throws IOException {
+    @Override
+    public void startUp(String message) {
+        System.out.printf("up: %s\n", MoveEsc.BARE_UP);
+        System.out.printf("down: %s\n", MoveEsc.BARE_DOWN);
+        System.out.printf("left: %s\n", MoveEsc.BARE_LEFT);
+        System.out.printf("right: %s\n", MoveEsc.BARE_RIGHT);
+    }
 
-        Reader reader = System.console().reader();
-        int input = reader.read();
-        int selected = 0;
+    @Override
+    public void shuttingDown(String message) {
 
-        while (input != -1) {
-            for (int i = 0; i < items.size(); i++) {
-                String item = items.get(i);
-                out.printf("%s %s", item, ">");
+    }
+
+    @Override
+    public void read(String c) {
+
+        if (MoveEsc.BARE_UP.equals(c.toLowerCase())) { selected--; }
+        else if (MoveEsc.BARE_DOWN.equals(c.toLowerCase())) { selected++; }
+
+        System.out.println("selected: " + selected);
+
+        if (selected < 0) { selected = items.size() - 1; }
+        else if (selected >= items.size()) { selected = 0; }
+
+        for (int i = 0; i < items.size(); i++) {
+            String item = items.get(i);
+            out.print(item);
+
+            if (selected == i) {
+                out.printf(" > %d or %d, %s %s", selected, items.size(), c.replace(""+AbstractEsc.ESC, "\\u001b"), MoveEsc.BARE_UP.replace(""+AbstractEsc.ESC, "\\u001b"));
             }
-
-            input = reader.read();
-
-
+            out.println();
         }
-
-        return null;
     }
 }

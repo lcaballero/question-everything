@@ -10,6 +10,11 @@ public class MoveEsc extends AbstractEsc {
     public static final char RIGHT = 'c';
     public static final char LEFT = 'd';
 
+    public static final String BARE_UP = String.format("%s[%s", ESC, UP);
+    public static final String BARE_DOWN = String.format("%s[%s", ESC, DOWN);
+    public static final String BARE_LEFT = String.format("%s[%s", ESC, LEFT);
+    public static final String BARE_RIGHT = String.format("%s[%s", ESC, RIGHT);
+
     protected int x;
     protected int y;
 
@@ -25,15 +30,15 @@ public class MoveEsc extends AbstractEsc {
     public int getX() { return x; }
     public int getY() { return y; }
 
-    public char[] toEscape(int x, int y) {
+    public static String toEscape(int x, int y) {
         String rs = "";
-        if (x != 0) { rs += toEscapes(x, x < 0 ? DOWN : UP); }
-        if (y != 0) { rs += toEscapes(y, y < 0 ? LEFT : RIGHT); }
-        return rs.toCharArray();
+        if (x != 0) { rs += toEscapes(x, x < 0 ? LEFT : RIGHT); }
+        if (y != 0) { rs += toEscapes(y, y < 0 ? DOWN : UP); }
+        return rs;
     }
 
-    public String toEscapes(int n, char ctrl) {
-        return String.format("%s[%s%s", ESC, ""+n, ctrl);
+    public static String toEscapes(int n, char ctrl) {
+        return String.format("%s[%s%s", ESC, ""+(n < 0 ? -n : n), ctrl);
     }
 
     @Override
