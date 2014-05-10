@@ -37,8 +37,17 @@ public class MoveEsc extends AbstractEsc {
         return rs;
     }
 
-    public static String toEscapes(int n, char ctrl) {
-        return String.format("%s[%s%s", ESC, ""+(n < 0 ? -n : n), ctrl);
+    public static boolean isDirChar(char c) {
+        return c == UP || c == DOWN || c == LEFT || c == RIGHT;
+    }
+
+    public static String toEscapes(int v, char ctrl) {
+        if (!isDirChar(ctrl)) {
+            throw new IllegalArgumentException("Cannot map control character: " + ctrl);
+        }
+        v = (v < 0 ? -v : v);
+        String n = (v == 1 ? "" : ""+v);
+        return String.format("%s[%s%s", ESC, n, ctrl);
     }
 
     @Override

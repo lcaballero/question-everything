@@ -22,20 +22,17 @@ public class ListMenu implements ITerminalListener {
     }
 
     @Override
-    public void startUp(String message) {
-        System.out.printf("up: %s\n", MoveEsc.BARE_UP);
-        System.out.printf("down: %s\n", MoveEsc.BARE_DOWN);
-        System.out.printf("left: %s\n", MoveEsc.BARE_LEFT);
-        System.out.printf("right: %s\n", MoveEsc.BARE_RIGHT);
-    }
+    public void startUp(String message) { }
 
     @Override
-    public void shuttingDown(String message) {
-
-    }
+    public void shuttingDown(String message) { }
 
     @Override
     public void read(String c) {
+
+        new CliColor()
+            .to(this.out)
+            .move(0, items.size());
 
         if (MoveEsc.BARE_UP.equals(c.toLowerCase())) { selected--; }
         else if (MoveEsc.BARE_DOWN.equals(c.toLowerCase())) { selected++; }
