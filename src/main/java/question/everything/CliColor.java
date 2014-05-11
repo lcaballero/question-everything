@@ -93,4 +93,16 @@ public class CliColor implements Colors {
         new MoveEsc(x, y).apply(this.out);
         return this;
     }
+
+    public CliColor toLineStart(int lines) {
+        new BeginningOfLineEsc(lines, false)
+            .apply(this.out);
+        return this;
+    }
+
+    public CliColor toClearedLines(int lines) {
+        new BeginningOfLineEsc(lines, true)
+            .apply(this.out);
+        return this;
+    }
 }

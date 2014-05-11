@@ -12,7 +12,9 @@ import java.util.List;
 public class App {
 
     public void start() throws IllegalAccessException, IOException {
-        menu();
+//        menu();
+        bol0();
+        bol2();
     }
 
     public void menu() throws IOException {
@@ -30,14 +32,34 @@ public class App {
         new Terminal().add(list).run();
     }
 
-    public void bol() {
+    public void bol0() {
 
-        System.out.print("Some test here ");
+        new CliColor()
+            .to(System.out)
+            .print("Some text here")
+            .toLineStart(0)
+            .println("Aarg");
+    }
 
-        new BeginningOfLineEsc(0)
-            .apply(System.out);
+    public void bol2() {
 
-        System.out.println("Aarg");
+        new CliColor()
+            .to(System.out)
+            .println("Line 1")
+            .println("Line 2")
+            .println("Line 3")
+            .print("Line 4")
+            .toLineStart(-2)
+            .println(">>>>");
+
+        new CliColor()
+            .to(System.out)
+            .println("Line 1")
+            .println("Line 2")
+            .println("Line 3")
+            .print("Line 4")
+            .toClearedLines(-2)
+            .println(">>>>");
     }
 
     public void readLine() {

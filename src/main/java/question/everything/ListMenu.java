@@ -38,7 +38,7 @@ public class ListMenu implements ITerminalListener {
             .to(this.out)
             .move(0, items.size());
 
-        new BeginningOfLineEsc(0)
+        new BeginningOfLineEsc(0, true)
             .apply(this.out);
 
         if (MoveEsc.BARE_UP.equals(c.toLowerCase())) { selected--; }
