@@ -3,7 +3,6 @@ package question.everything;
 import com.google.common.collect.ImmutableMap;
 
 import java.io.PrintStream;
-import java.io.PrintWriter;
 
 public class CliColor implements Colors {
 

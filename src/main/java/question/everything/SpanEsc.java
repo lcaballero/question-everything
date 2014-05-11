@@ -3,7 +3,6 @@ package question.everything;
 import com.google.common.base.Joiner;
 
 import java.io.PrintStream;
-import java.io.PrintWriter;
 
 
 public class SpanEsc extends AbstractEsc {

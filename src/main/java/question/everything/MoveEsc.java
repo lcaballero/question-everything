@@ -1,7 +1,6 @@
 package question.everything;
 
 import java.io.PrintStream;
-import java.io.PrintWriter;
 
 public class MoveEsc extends AbstractEsc {
 
