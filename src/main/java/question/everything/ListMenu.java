@@ -10,51 +10,88 @@ public class ListMenu implements ITerminalListener {
     private PrintStream out;
     private SpanEsc active;
     private SpanEsc other;
+    private CliColor cli;
     private int selected;
+    private Terminal terminal;
 
     public ListMenu(List<String> items, SpanEsc active, SpanEsc other, PrintStream out) {
         this.items = items;
         this.active = active;
         this.other = other;
         this.out = out;
+        this.cli = new CliColor();
     }
 
     @Override
     public void startUp(String message) {
-        moveSelection("");
+        this.cli.to(this.out);
+        moveSelection("", true);
     }
 
     @Override
-    public void shuttingDown(String message) { }
+    public void shuttingDown(String message) {
+        this.terminal.remove(this); // remove this class as listener from the terminal
+        this.terminal = null;       // remove reference to the Terminal instance.
+    }
 
     @Override
     public void read(String c) {
-        moveSelection(c);
+        moveSelection(c, false);
     }
 
-    private void moveSelection(String c) {
+    public boolean isUp(String c) {
+        return MoveEsc.BARE_UP.equals(c.toLowerCase());
+    }
 
-        new CliColor()
-            .to(this.out)
-            .move(0, items.size());
+    public boolean isDown(String c) {
+        return MoveEsc.BARE_DOWN.equals(c.toLowerCase());
+    }
 
-        new BeginningOfLineEsc(0, true)
-            .apply(this.out);
+    public int limit(int selected, int max) {
+        if (selected < 0) { return items.size() - 1; }
+        else if (selected >= max) { return 0; }
+        else { return selected; }
+    }
 
-        if (MoveEsc.BARE_UP.equals(c.toLowerCase())) { selected--; }
-        else if (MoveEsc.BARE_DOWN.equals(c.toLowerCase())) { selected++; }
+    public int toSelected(String c, int selected, int max) {
+        if (isUp(c)) {
+            return limit(--selected, max);
+        } else if (isDown(c)) {
+            return limit(++selected, max);
+        } else {
+            return selected;
+        }
+    }
 
-        if (selected < 0) { selected = items.size() - 1; }
-        else if (selected >= items.size()) { selected = 0; }
+    private void moveSelection(String c, boolean firstCall) {
+
+        if ("\n".equals(c)) {
+            this.terminal.shutdown();
+            return;
+        }
+
+        if (!firstCall) {
+            this.cli.toClearedLines(-items.size()); // Move up number of items
+        }
+
+        selected = toSelected(c, this.selected, items.size());
 
         for (int i = 0; i < items.size(); i++) {
+
             String item = items.get(i);
-            out.print(item);
 
             if (selected == i) {
-                out.printf(" > %d or %d, %s %s", selected, items.size(), c.replace(""+ AbstractEsc.ESC, "\\u001b"), MoveEsc.BARE_UP.replace(""+AbstractEsc.ESC, "\\u001b"));
+                this.out.print(this.active.surround(item, " >"));
+            } else {
+                this.out.print(this.other.surround(item));
             }
-            out.println();
+            this.cli.println();
         }
+    }
+
+    public String run() {
+        this.terminal = new Terminal();
+        this.terminal.add(this).run();
+        return this.items.get(this.selected);
     }
 }

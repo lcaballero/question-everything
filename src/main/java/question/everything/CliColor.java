@@ -11,12 +11,12 @@ public class CliColor implements Colors {
     private SpanEsc activeColor = Colors.none;
 
     public CliColor print(String... args) {
-        activeColor.apply(this.out, args);
+        this.out.print(activeColor.surround(args));
         return this;
     }
 
     public CliColor println(String... args) {
-        activeColor.apply(this.out, args);
+        this.out.print(activeColor.surround(args));
         this.out.println();
         return this;
     }
@@ -90,19 +90,17 @@ public class CliColor implements Colors {
     }
 
     public CliColor move(int x, int y) {
-        new MoveEsc(x, y).apply(this.out);
+        this.out.print(new MoveEsc(x, y).apply());
         return this;
     }
 
     public CliColor toLineStart(int lines) {
-        new BeginningOfLineEsc(lines, false)
-            .apply(this.out);
+        this.out.print(new BeginningOfLineEsc(lines, false).apply());
         return this;
     }
 
     public CliColor toClearedLines(int lines) {
-        new BeginningOfLineEsc(lines, true)
-            .apply(this.out);
+        this.out.print(new BeginningOfLineEsc(lines, true).apply());
         return this;
     }
 }

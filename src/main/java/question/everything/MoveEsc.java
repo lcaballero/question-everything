@@ -1,7 +1,5 @@
 package question.everything;
 
-import java.io.PrintStream;
-
 public class MoveEsc extends AbstractEsc {
 
     public static final char UP = 'a';
@@ -50,12 +48,13 @@ public class MoveEsc extends AbstractEsc {
     }
 
     @Override
-    public MoveEsc apply(PrintStream out, String... args) {
-        if (args != null && args.length > 0) {
-            throw new IllegalArgumentException("Cannot both move cursor and output args");
-        }
-        out.print(toEscape(this.x, this.y));
-        return this;
+    public String apply() {
+        return toEscape(this.x, this.y);
+    }
+
+    @Override
+    public String surround(String... args) {
+        throw new UnsupportedOperationException("surround() not supported in MoveEsc");
     }
 
     @Override

@@ -2,8 +2,6 @@ package question.everything;
 
 import com.google.common.base.Strings;
 
-import java.io.PrintStream;
-
 
 public class BeginningOfLineEsc extends AbstractEsc {
 
@@ -32,16 +30,20 @@ public class BeginningOfLineEsc extends AbstractEsc {
     }
 
     @Override
-    public AbstractEsc apply(PrintStream out, String... args) {
-        if (this.isClearingLines) {
-            toClearedLine(out, this.lines);
-        } else {
-            toLineStart(out, this.lines);
-        }
-        return this;
+    public String surround(String... args) {
+        throw new UnsupportedOperationException("surround() is not supported by " + this.getClass().getName());
     }
 
-    public void toClearedLine(PrintStream out, int lines) {
+    @Override
+    public String apply() {
+        if (this.isClearingLines) {
+            return toClearedLine(this.lines);
+        } else {
+            return toLineStart(this.lines);
+        }
+    }
+
+    public String toClearedLine(int lines) {
 
         char dir = toDirection(lines);
         int n = toLineCount(lines);
@@ -54,7 +56,7 @@ public class BeginningOfLineEsc extends AbstractEsc {
 
         String clearLines = Strings.repeat(String.format("%s[1%s%s[K", ESC, dir, ESC), n);
 
-        out.printf("%s%s", prefix, clearLines);
+        return String.format("%s%s", prefix, clearLines);
     }
 
     /**
@@ -62,14 +64,12 @@ public class BeginningOfLineEsc extends AbstractEsc {
      * number move the cursor up, and a positive number moves the cursor downward, and
      * then to the beginning of the line.
      *
-     * @param out the Stream to output the right escapes for the task.
      * @param lines the number of lines where sign indicates direction.
      */
-    public void toLineStart(PrintStream out, int lines) {
+    public String toLineStart(int lines) {
         char dir = toDirection(this.lines);
         int n = toLineCount(this.lines);
         String close = toCloseEsc(n, dir);
-        out.print(close);
-
+        return close;
     }
 }

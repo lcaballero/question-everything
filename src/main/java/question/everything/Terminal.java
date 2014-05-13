@@ -13,6 +13,7 @@ public class Terminal {
     private String ttyConfig;
     private boolean hasReceivedShutdown = false;
     private List<ITerminalListener> listeners;
+    private boolean isRunning = false;
 
     class HandleCtrlC extends Thread {
         public void run() { hasReceivedShutdown = true; }
@@ -27,16 +28,24 @@ public class Terminal {
         return this;
     }
 
+    public boolean remove(ITerminalListener listener) {
+        return this.listeners.remove(listener);
+    }
+
     protected void fireShutdown(String message) {
-        listeners.stream().forEach((c) -> c.shuttingDown(message));
+        this.listeners.stream().forEach((c) -> c.shuttingDown(message));
     }
 
     protected void fireRead(String chars) {
-        listeners.stream().forEach((c) -> c.read(chars));
+        this.listeners.stream().forEach((c) -> c.read(chars));
     }
 
     protected void fireStartUp(String message) {
-        listeners.stream().forEach((c) -> c.startUp(message));
+        this.listeners.stream().forEach((c) -> c.startUp(message));
+    }
+
+    public void shutdown() {
+        this.isRunning = false;
     }
 
     public void run() {
@@ -45,8 +54,9 @@ public class Terminal {
             setTerminalToCBreak();
             Runtime.getRuntime().addShutdownHook(new HandleCtrlC());
             fireStartUp("Starting Up");
+            this.isRunning = true;
 
-            while (true) {
+            while (this.isRunning) {
                 if (hasReceivedShutdown) {
                     fireShutdown("Killing read loop");
                     break;

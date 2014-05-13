@@ -2,13 +2,11 @@ package question.everything;
 
 import com.google.common.base.Joiner;
 
-import java.io.PrintStream;
-
 
 public class SpanEsc extends AbstractEsc {
 
-    protected char[] escStart = new char[0];
-    protected char[] escEnd = new char[0];
+    protected String escStart = "";
+    protected String escEnd = "";
     protected String name = Colors.NONE;
 
     /**
@@ -24,8 +22,8 @@ public class SpanEsc extends AbstractEsc {
      */
     public SpanEsc(String name, int start, int end) {
         this.name = name;
-        this.escStart = String.format("%s[%sm", ESC, String.valueOf(start)).toCharArray();
-        this.escEnd = String.format("%s[%sm", ESC, String.valueOf(end)).toCharArray();
+        this.escStart = String.format("%s[%sm", ESC, String.valueOf(start));
+        this.escEnd = String.format("%s[%sm", ESC, String.valueOf(end));
     }
 
     /**
@@ -45,8 +43,8 @@ public class SpanEsc extends AbstractEsc {
      * @param b The escape to concatenate.
      */
     protected SpanEsc(SpanEsc a, SpanEsc b) {
-        this.escStart = add(a.escStart, b.escStart);
-        this.escEnd = add(a.escEnd, b.escEnd);
+        this.escStart = a.escStart + b.escStart;
+        this.escEnd = a.escEnd + b.escEnd;
 
         String prefix = Colors.NONE.equals(a.name) ? "" : String.format("%s + ", a.name);
         this.name = String.format("%s%s", prefix, b.name);
@@ -57,15 +55,17 @@ public class SpanEsc extends AbstractEsc {
     }
 
     @Override
-    public SpanEsc apply(PrintStream out, String... params) {
-        if (this.escStart.length == 0 || this.escEnd.length == 0) {
-            System.out.print(Joiner.on(" ").join((params)));
+    public String apply() {
+        return this.surround();
+    }
+
+    @Override
+    public String surround(String... params) {
+        if (this.escStart == null || this.escStart.length() == 0 || this.escEnd == null || this.escEnd.length() == 0) {
+            return Joiner.on(" ").join((params));
         } else {
-            System.out.print(escStart);
-            System.out.print(Joiner.on(" ").join((params)));
-            System.out.print(escEnd);
+            return String.format("%s%s%s", escStart, Joiner.on(" ").join(params), escEnd);
         }
-        return this;
     }
 
     @Override
@@ -73,8 +73,8 @@ public class SpanEsc extends AbstractEsc {
         return String.format(
             "%s%s%s",
             this.name,
-            new String(this.escStart),
-            new String(this.escEnd)).hashCode();
+            this.escStart,
+            this.escEnd).hashCode();
     }
 
     @Override
@@ -84,10 +84,13 @@ public class SpanEsc extends AbstractEsc {
         }
         SpanEsc esc = (SpanEsc)obj;
 
+        String start = this.escStart == null ? "" : this.escStart;
+        String end = this.escEnd == null ? "" : this.escEnd;
+
         return
             this.name.equals(esc.name)
-            && new String(this.escStart).equals(new String(esc.escStart))
-            && new String(this.escEnd).equals(new String(esc.escEnd));
+            && start.equals(esc.escStart)
+            && end.equals(esc.escEnd);
     }
 
     public String getName() { return name; }

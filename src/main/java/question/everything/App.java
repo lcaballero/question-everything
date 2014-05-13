@@ -12,14 +12,14 @@ import java.util.List;
 public class App {
 
     public void start() throws IllegalAccessException, IOException {
-//        menu();
-        bol0();
-        bol2();
+        menu();
+//        bol0();
+//        bol2();
     }
 
     public void menu() throws IOException {
 
-        SpanEsc blue = new CliColor().to(System.out).blue().getActiveColor();
+        SpanEsc blue = Colors.blue;
         SpanEsc none = Colors.none;
 
         List<String> items = new ArrayList<>();
@@ -27,9 +27,9 @@ public class App {
         items.add("Menu item 2 selection");
         items.add("Menu item 3 selection");
 
-        ListMenu list = new ListMenu(items, blue, none, System.out);
+        String item = new ListMenu(items, blue, none, System.out).run();
 
-        new Terminal().add(list).run();
+        System.out.println(Colors.red.surround(item));
     }
 
     public void bol0() {
